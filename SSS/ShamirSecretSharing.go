@@ -99,26 +99,47 @@ func poly(x int,n int,D int, p int) int{
 
 //THE FOLLOWING FUNCTION REVEALS EACH CHARACTER ASCII BY LAGRANGE INTERPOLATION. INPUTS ARE x WHICH IS SET TO 0 DURING CALL,DEGREE,SECRET PIECES,INDICES,PRIME
 func interpolate(x int,n int,ar [6]int,pcs [6]int,p int) int{
-	sum:=0.0
+	sum:=0
 	a:=1
 	b:=1
-	var c float64
+	
+	
 	for i:=0;i<=n;i++{
 		for j:=0;j<=n;j++{
 			if j!=i{
-				a=a*(x-pcs[j])
-				b=b*(pcs[i]-pcs[j])
-				
+				a=(a*(x-pcs[j]))%p
+				b=(b*(pcs[i]-pcs[j]))%p
+				if a<0{
+					a=p+a
+				}
+				if b<0{
+					b=p+b
+				}
 
 			}
 
 		}
-		c=float64(a/b)
-		sum=sum+c*(float64(ar[i]))
+		c:=inverse(b,p)
+		sum=(sum+a*c*ar[i])%p
 		a=1
 		b=1
 	}
-	return (int(sum))%p
+	return sum
+
+}
+
+//THE FOLLOWING FUNCTION FINDS THE INVERSE OF AN ELEMENT IN THE FIELD Zp WHERE p=257. COULD ALSO BE DONE BY EXTENDED EUCLIDEAN ALGORITHM
+func inverse(x int, p int) int{
+	var i int
+	
+	for i=1;i<p;i++{
+		if (i*x)%p==1{
+			break
+		}
+	}
+
+return i
+
 
 }
 
